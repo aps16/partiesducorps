@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Les parties du corps</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fredoka:wght@500;600&display=swap">
+<style>
+/* Layout: one large card centred, image on the front, word + sound on the back, controls below. */
+:root {
+  --bg: #eef3f9;
+  --card: #ffffff;
+  --ink: #14213d;
+  --muted: #5a6a85;
+  --line: #9fb0c9;
+  --shape: #dbe6f4;
+  --hl: #e4572e;
+  --hl-ink: #ffffff;
+  --btn: #14213d;
+  --btn-ink: #ffffff;
+  --btn-soft: #dde7f4;
+  --focus: #1b6ef3;
+  --eye: #ffffff;
+  --lip: #f1a7a0;
+  --hair: #3b4a66;
+  --font-ui: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-word: "Fredoka", "Atkinson Hyperlegible", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1627; --card: #172238; --ink: #eaf0fb; --muted: #9db0cf; --line: #5a6e92;
+    --shape: #2a3a5a; --hl: #ff7a59; --hl-ink: #1a0d08; --btn: #eaf0fb; --btn-ink: #0d1627;
+    --btn-soft: #24334f; --focus: #7db0ff; --eye: #eaf0fb; --lip: #c97b78; --hair: #9db0cf;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1627; --card: #172238; --ink: #eaf0fb; --muted: #9db0cf; --line: #5a6e92;
+  --shape: #2a3a5a; --hl: #ff7a59; --hl-ink: #1a0d08; --btn: #eaf0fb; --btn-ink: #0d1627;
+  --btn-soft: #24334f; --focus: #7db0ff; --eye: #eaf0fb; --lip: #c97b78; --hair: #9db0cf;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-ui);
+  font-size: 17px; line-height: 1.4; min-height: 100%;
+  padding-block: 20px 28px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main { max-width: 440px; margin-inline: auto; display: flex; flex-direction: column; gap: 16px; }
+header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+h1 { font-family: var(--font-word); font-weight: 600; font-size: 1.6rem; margin: 0; text-wrap: balance; }
+.count { color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 700; }
+
+.scene { perspective: 1200px; }
+.card {
+  position: relative; display: block; width: 100%; aspect-ratio: 5 / 6; padding: 0; border: 0;
+  background: none; cursor: pointer; font: inherit; color: inherit;
+}
+.card:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; border-radius: 24px; }
+.inner { position: absolute; inset: 0; transition: transform .55s cubic-bezier(.3,.7,.2,1); transform-style: preserve-3d; }
+.card.flipped .inner { transform: rotateY(180deg); }
+.face {
+  position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  background: var(--card); border: 2px solid var(--line); border-radius: 24px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px;
+}
+.back { transform: rotateY(180deg); }
+.front svg { width: 100%; max-height: 82%; flex: 1; min-height: 0; }
+.hint { color: var(--muted); font-size: .95rem; }
+.word { font-family: var(--font-word); font-weight: 600; font-size: clamp(2.6rem, 14vw, 3.8rem); line-height: 1.05; text-align: center; overflow-wrap: anywhere; }
+.word .art { color: var(--muted); font-weight: 500; }
+.ipa { font-size: 1.5rem; color: var(--muted); letter-spacing: .02em; }
+.ipa[hidden] { display: none !important; }
+.sound { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+
+button.btn {
+  font: inherit; font-weight: 700; min-height: 52px; padding: 0 20px; border-radius: 14px; border: 0; cursor: pointer;
+  background: var(--btn); color: var(--btn-ink);
+}
+button.btn.soft { background: var(--btn-soft); color: var(--ink); }
+button.btn:focus-visible, .chip:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.nav { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.nav .btn { width: 100%; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px 18px; color: var(--muted); font-size: .95rem; }
+.opts label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; min-height: 32px; }
+.opts input { width: 20px; height: 20px; accent-color: var(--hl); }
+.opts button { font: inherit; color: var(--ink); background: var(--btn-soft); border: 0; border-radius: 10px; padding: 0 12px; min-height: 36px; font-weight: 700; cursor: pointer; }
+.chips { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; }
+.chip {
+  font: inherit; font-weight: 700; font-variant-numeric: tabular-nums; min-height: 40px; border-radius: 10px;
+  border: 2px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; padding: 0;
+}
+.chip[aria-current="true"] { background: var(--hl); border-color: var(--hl); color: var(--hl-ink); }
+.note { color: var(--muted); font-size: .9rem; margin: 0; }
+
+svg .base { fill: var(--shape); stroke: var(--line); stroke-width: 2; }
+svg .hl { fill: var(--hl); stroke: var(--hl); stroke-width: 2; }
+svg .ln { stroke: var(--line); stroke-width: 2; fill: none; stroke-linecap: round; }
+svg .eye { fill: var(--eye); stroke: var(--line); stroke-width: 2; }
+svg .eye.hl { fill: var(--hl); stroke: var(--hl); }
+svg .pupil { fill: var(--ink); }
+svg .hair { fill: var(--hair); stroke: var(--line); stroke-width: 2; }
+svg .hair.hl { fill: var(--hl); stroke: var(--hl); }
+svg .lip { fill: var(--lip); stroke: var(--line); stroke-width: 2; }
+svg .lip.hl { fill: var(--hl); stroke: var(--hl); }
+svg .tag { font-family: var(--font-ui); font-size: 13px; fill: var(--muted); }
+
+@media (max-width: 380px) {
+  .chips { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .inner { transition: none; }
+}
+</style>
+
+</head>
+<body>
+<main>
+  <header>
+    <h1>Les parties du corps</h1>
+    <span class="count" id="count" aria-live="polite"></span>
+  </header>
+
+  <div class="scene">
+    <button class="card" id="card" type="button" aria-label="Retourner la carte">
+      <div class="inner">
+        <div class="face front">
+          <div id="pic" role="img" aria-label="Image de la partie du corps"></div>
+          <div class="hint">Touche la carte pour voir le mot</div>
+        </div>
+        <div class="face back">
+          <div class="word" id="word"></div>
+          <div class="ipa" id="ipa"></div>
+          <div class="sound">
+            <span class="btn soft" role="button" tabindex="0" id="again" aria-label="Écouter le mot">Écouter</span>
+            <span class="btn soft" role="button" tabindex="0" id="slow" aria-label="Écouter le mot lentement">Plus lent</span>
+          </div>
+        </div>
+      </div>
+    </button>
+  </div>
+
+  <div class="nav">
+    <button class="btn soft" id="prev" type="button">Précédent</button>
+    <button class="btn" id="next" type="button">Suivant</button>
+  </div>
+
+  <div class="opts">
+    <label><input type="checkbox" id="auto" checked> Son automatique</label>
+    <label><input type="checkbox" id="showIpa" checked> Phonétique</label>
+    <button type="button" id="shuffle">Mélanger</button>
+  </div>
+
+  <div class="chips" id="chips" aria-label="Aller à une carte"></div>
+  <p class="note" id="note"></p>
+</main>
+
+<script>
+(function () {
+  /* ---------- drawings ---------- */
+  function c(h, key) { return h.indexOf(key) > -1 ? 'hl' : 'base'; }
+  function limb(x1, y1, x2, y2, w, cls) {
+    var col = cls === 'hl' ? 'var(--hl)' : 'var(--shape)';
+    return '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="var(--line)" stroke-width="' + w + '" stroke-linecap="round"/>' +
+           '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + col + '" stroke-width="' + (w - 4) + '" stroke-linecap="round"/>';
+  }
+  function body(h) {
+    var s = '<svg viewBox="0 0 200 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">';
+    s += limb(82, 200, 80, 318, 28, c(h, 'legs'));
+    s += limb(118, 200, 120, 318, 28, c(h, 'legs'));
+    s += limb(58, 104, 38, 204, 22, c(h, 'arms'));
+    s += limb(142, 104, 162, 204, 22, c(h, 'arms'));
+    s += '<circle class="base" cx="36" cy="214" r="12"/><circle class="base" cx="164" cy="214" r="12"/>';
+    s += '<rect class="base" x="62" y="86" width="76" height="118" rx="26"/>';
+    s += '<rect class="' + c(h, 'neck') + '" x="90" y="66" width="20" height="26" rx="8"/>';
+    s += '<ellipse class="' + c(h, 'head') + '" cx="100" cy="40" rx="28" ry="32"/>';
+    if (h.indexOf('head') < 0) {
+      s += '<circle cx="90" cy="38" r="3" fill="var(--ink)"/><circle cx="110" cy="38" r="3" fill="var(--ink)"/>';
+      s += '<path class="ln" d="M90 54 Q100 62 110 54"/>';
+    }
+    s += '<ellipse class="' + c(h, 'belly') + '" cx="100" cy="150" rx="26" ry="28"/>';
+    s += '<circle class="' + c(h, 'shoulders') + '" cx="64" cy="98" r="14"/><circle class="' + c(h, 'shoulders') + '" cx="136" cy="98" r="14"/>';
+    s += '<circle class="' + c(h, 'knees') + '" cx="81" cy="262" r="15"/><circle class="' + c(h, 'knees') + '" cx="119" cy="262" r="15"/>';
+    s += '<ellipse class="' + c(h, 'feet') + '" cx="72" cy="338" rx="22" ry="10"/><ellipse class="' + c(h, 'feet') + '" cx="128" cy="338" rx="22" ry="10"/>';
+    return s + '</svg>';
+  }
+  function back() {
+    var s = '<svg viewBox="0 0 200 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">';
+    s += limb(82, 200, 80, 318, 28, 'base') + limb(118, 200, 120, 318, 28, 'base');
+    s += limb(58, 104, 38, 204, 22, 'base') + limb(142, 104, 162, 204, 22, 'base');
+    s += '<circle class="base" cx="36" cy="214" r="12"/><circle class="base" cx="164" cy="214" r="12"/>';
+    s += '<rect class="base" x="90" y="66" width="20" height="26" rx="8"/>';
+    s += '<ellipse class="hair" cx="100" cy="40" rx="28" ry="32"/>';
+    s += '<rect class="hl" x="62" y="86" width="76" height="118" rx="26"/>';
+    s += '<path d="M100 96 L100 196" stroke="var(--hl-ink)" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 8" fill="none"/>';
+    s += '<ellipse class="base" cx="72" cy="338" rx="22" ry="10"/><ellipse class="base" cx="128" cy="338" rx="22" ry="10"/>';
+    s += '<text class="tag" x="100" y="356" text-anchor="middle">vue de dos</text>';
+    return s + '</svg>';
+  }
+  function face(h) {
+    var s = '<svg viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">';
+    s += '<ellipse class="' + c(h, 'ear') + '" cx="38" cy="124" rx="11" ry="19"/>';
+    s += '<ellipse class="base" cx="162" cy="124" rx="11" ry="19"/>';
+    s += '<ellipse class="base" cx="100" cy="124" rx="58" ry="78"/>';
+    s += '<path class="hair' + (h.indexOf('hair') > -1 ? ' hl' : '') + '" d="M40 112 C32 44 76 22 100 22 C124 22 168 44 160 112 C142 78 124 68 100 68 C76 68 58 78 40 112 Z"/>';
+    s += '<path class="ln" d="M64 96 Q76 90 88 96 M112 96 Q124 90 136 96"/>';
+    var e = h.indexOf('eyes') > -1 ? ' hl' : '';
+    s += '<ellipse class="eye' + e + '" cx="76" cy="116" rx="13" ry="9"/><ellipse class="eye' + e + '" cx="124" cy="116" rx="13" ry="9"/>';
+    s += '<circle class="pupil" cx="76" cy="116" r="4.5"/><circle class="pupil" cx="124" cy="116" r="4.5"/>';
+    s += '<path class="' + (h.indexOf('nose') > -1 ? 'hl' : 'base') + '" d="M100 124 Q90 152 84 158 Q100 170 116 158 Q110 152 100 124 Z"/>';
+    s += '<path class="lip' + (h.indexOf('mouth') > -1 ? ' hl' : '') + '" d="M74 184 Q100 174 126 184 Q100 210 74 184 Z"/>';
+    return s + '</svg>';
+  }
+  function hand(h) {
+    var f = function (k) { return c(h, k); };
+    var s = '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">';
+    s += limb(66, 140, 30, 100, 24, f('thumb'));
+    s += '<rect class="' + f('index') + '" x="62" y="32" width="19" height="84" rx="9.5"/>';
+    s += '<rect class="' + f('middle') + '" x="84" y="22" width="19" height="94" rx="9.5"/>';
+    s += '<rect class="' + f('ring') + '" x="106" y="32" width="19" height="84" rx="9.5"/>';
+    s += '<rect class="' + f('pinky') + '" x="128" y="52" width="17" height="64" rx="8.5"/>';
+    s += '<rect class="' + f('palm') + '" x="58" y="96" width="92" height="86" rx="26"/>';
+    return s + '</svg>';
+  }
+  var ALL_HAND = 'thumb index middle ring pinky palm';
+
+  /* ---------- cards ---------- */
+  var CARDS = [
+    { art: 'la',  word: 'tête',     ipa: '/tɛt/',      say: 'la tête',     svg: function () { return body('head'); } },
+    { art: 'les', word: 'cheveux',  ipa: '/ʃ(ə).vø/',  say: 'les cheveux', svg: function () { return face('hair'); } },
+    { art: 'les', word: 'yeux',     ipa: '/jø/',       say: 'les yeux',    svg: function () { return face('eyes'); } },
+    { art: 'le',  word: 'nez',      ipa: '/ne/',       say: 'le nez',      svg: function () { return face('nose'); } },
+    { art: 'la',  word: 'bouche',   ipa: '/buʃ/',      say: 'la bouche',   svg: function () { return face('mouth'); } },
+    { art: 'l’',  word: 'oreille',  ipa: '/ɔ.ʁɛj/',    say: 'l’oreille',   svg: function () { return face('ear'); } },
+    { art: 'le',  word: 'cou',      ipa: '/ku/',       say: 'le cou',      svg: function () { return body('neck'); } },
+    { art: 'l’',  word: 'épaule',   ipa: '/e.pol/',    say: 'l’épaule',    svg: function () { return body('shoulders'); } },
+    { art: 'le',  word: 'bras',     ipa: '/bʁa/',      say: 'le bras',     svg: function () { return body('arms'); } },
+    { art: 'la',  word: 'main',     ipa: '/mɛ̃/',       say: 'la main',     svg: function () { return hand(ALL_HAND); } },
+    { art: 'le',  word: 'doigt',    ipa: '/dwa/',      say: 'le doigt',    svg: function () { return hand('index'); } },
+    { art: 'le',  word: 'ventre',   ipa: '/vɑ̃tʁ/',     say: 'le ventre',   svg: function () { return body('belly'); } },
+    { art: 'le',  word: 'dos',      ipa: '/do/',       say: 'le dos',      svg: function () { return back(); } },
+    { art: 'la',  word: 'jambe',    ipa: '/ʒɑ̃b/',      say: 'la jambe',    svg: function () { return body('legs'); } },
+    { art: 'le',  word: 'genou',    ipa: '/ʒ(ə).nu/',  say: 'le genou',    svg: function () { return body('knees'); } },
+    { art: 'le',  word: 'pied',     ipa: '/pje/',      say: 'le pied',     svg: function () { return body('feet'); } }
+  ];
+
+  var order = CARDS.map(function (_, i) { return i; });
+  var pos = 0, flipped = false;
+  var $ = function (id) { return document.getElementById(id); };
+  var card = $('card'), pic = $('pic'), wordEl = $('word'), ipaEl = $('ipa'), note = $('note');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- sound ---------- */
+  var synth = window.speechSynthesis, voice = null;
+  function pickVoice() {
+    if (!synth) return;
+    var v = synth.getVoices() || [];
+    voice = v.filter(function (x) { return /^fr[-_]FR/i.test(x.lang); })[0] ||
+            v.filter(function (x) { return /^fr/i.test(x.lang); })[0] || null;
+  }
+  if (synth) { pickVoice(); if (synth.addEventListener) synth.addEventListener('voiceschanged', pickVoice); }
+  function speak(text, rate) {
+    if (!synth || typeof SpeechSynthesisUtterance === 'undefined') return;
+    try {
+      synth.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = (voice && voice.lang) || 'fr-FR';
+      if (voice) u.voice = voice;
+      u.rate = rate || 0.8;
+      synth.speak(u);
+    } catch (e) {}
+  }
+  function current() { return CARDS[order[pos]]; }
+
+  /* ---------- render ---------- */
+  function setBack() {
+    var d = current();
+    wordEl.innerHTML = '<span class="art">' + d.art + (d.art.slice(-1) === '’' ? '' : ' ') + '</span>' + d.word;
+    ipaEl.textContent = d.ipa;
+  }
+  function render(keepBack) {
+    var d = current();
+    pic.innerHTML = d.svg();
+    pic.style.cssText = 'display:flex;justify-content:center;width:100%;flex:1;min-height:0';
+    var svg = pic.firstChild; if (svg) { svg.style.height = '100%'; svg.style.maxHeight = '100%'; }
+    $('count').textContent = (pos + 1) + ' / ' + CARDS.length;
+    var chips = document.querySelectorAll('.chip');
+    for (var i = 0; i < chips.length; i++) chips[i].setAttribute('aria-current', i === pos ? 'true' : 'false');
+    if (keepBack) setBack(); else setTimeout(setBack, reduce ? 0 : 320);
+  }
+  function setFlipped(f, withSound) {
+    flipped = f;
+    card.classList.toggle('flipped', f);
+    card.setAttribute('aria-label', f ? 'Retourner la carte (image)' : 'Retourner la carte (mot)');
+    if (f && withSound && $('auto').checked) speak(current().say, 0.8);
+    if (!f && synth) { try { synth.cancel(); } catch (e) {} }
+  }
+  function go(n) {
+    var was = flipped;
+    pos = (n + CARDS.length) % CARDS.length;
+    setFlipped(false, false);
+    render(!was);
+  }
+
+  /* ---------- events ---------- */
+  card.addEventListener('click', function () { setFlipped(!flipped, true); });
+  function onBtn(el, fn) {
+    el.addEventListener('click', function (e) { e.stopPropagation(); fn(); });
+    el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); fn(); } });
+  }
+  onBtn($('again'), function () { speak(current().say, 0.8); });
+  onBtn($('slow'), function () { speak(current().say, 0.45); });
+  $('next').addEventListener('click', function () { go(pos + 1); });
+  $('prev').addEventListener('click', function () { go(pos - 1); });
+  $('showIpa').addEventListener('change', function () { ipaEl.hidden = !this.checked; });
+  $('shuffle').addEventListener('click', function () {
+    for (var i = order.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = order[i]; order[i] = order[j]; order[j] = t; }
+    go(0);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.target && /INPUT|BUTTON/.test(e.target.tagName) && e.key === ' ') return;
+    if (e.key === 'ArrowRight') go(pos + 1);
+    else if (e.key === 'ArrowLeft') go(pos - 1);
+  });
+
+  var chipsEl = $('chips');
+  CARDS.forEach(function (_, i) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = i + 1; b.id = 'chip' + i;
+    b.setAttribute('aria-label', 'Carte ' + (i + 1));
+    b.addEventListener('click', function () { go(i); });
+    chipsEl.appendChild(b);
+  });
+
+  if (!synth || typeof SpeechSynthesisUtterance === 'undefined') {
+    note.textContent = 'Le son n’est pas disponible sur cet appareil ou ce navigateur. Essaie Chrome, Edge ou Safari.';
+  } else {
+    note.textContent = 'Le son est lu par la voix française de ton appareil. Active le volume.';
+  }
+  render(true);
+})();
+</script>
+</body>
+</html>
